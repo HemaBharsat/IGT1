@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="css/leaflet.css"><link rel="stylesheet" href="css/L.Control.Locate.min.css">
+        <link rel="stylesheet" href="css/qgis2web.css"><link rel="stylesheet" href="css/fontawesome-all.min.css">
+        <link rel="stylesheet" href="css/leaflet-search.css">
+        <link rel="stylesheet" href="css/leaflet-control-geocoder.Geocoder.css">
+        <link rel="stylesheet" href="css/leaflet-measure.css">
+        <style>
+        #map {
+            width: 1603px;
+            height: 623px;
+        }
+        </style>
+        <title></title>
+    </head>
+    <body>
+        <div id="map">
+        </div>
+        <script src="js/qgis2web_expressions.js"></script>
+        <script src="js/leaflet.js"></script><script src="js/L.Control.Locate.min.js"></script>
+        <script src="js/leaflet.rotatedMarker.js"></script>
+        <script src="js/leaflet.pattern.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <script src="js/rbush.min.js"></script>
+        <script src="js/labelgun.min.js"></script>
+        <script src="js/labels.js"></script>
+        <script src="js/leaflet-control-geocoder.Geocoder.js"></script>
+        <script src="js/leaflet-measure.js"></script>
+        <script src="js/leaflet-search.js"></script>
+        <script src="data/IND_adm1_1.js"></script>
+        <script>
+        var highlightLayer;
+        function highlightFeature(e) {
+            highlightLayer = e.target;
+
+            if (e.target.feature.geometry.type === 'LineString') {
+              highlightLayer.setStyle({
+                color: '#ffff00',
+              });
+            } else {
+              highlightLayer.setStyle({
+                fillColor: '#ffff00',
+                fillOpacity: 1
+              });
+            }
+            highlightLayer.openPopup();
+        }
+        var map = L.map('map', {
+            zoomControl:true, maxZoom:28, minZoom:1
+        }).fitBounds([[4.80952772036215,52.65276200788589],[30.88397267066494,119.87528433547811]]);
+        var hash = new L.Hash(map);
+        map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
+        var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
+        L.control.locate({locateOptions: {maxZoom: 19}}).addTo(map);
+        var measureControl = new L.Control.Measure({
+            position: 'topleft',
+            primaryLengthUnit: 'meters',
+            secondaryLengthUnit: 'kilometers',
+            primaryAreaUnit: 'sqmeters',
+            secondaryAreaUnit: 'hectares'
+        });
+        measureControl.addTo(map);
+        document.getElementsByClassName('leaflet-control-measure-toggle')[0]
+        .innerHTML = '';
+        document.getElementsByClassName('leaflet-control-measure-toggle')[0]
+        .className += ' fas fa-ruler';
+        var bounds_group = new L.featureGroup([]);
+        function setBounds() {
+        }
+        map.createPane('pane_OSMStandard_0');
+        map.getPane('pane_OSMStandard_0').style.zIndex = 400;
+        var layer_OSMStandard_0 = L.tileLayer('http://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            pane: 'pane_OSMStandard_0',
+            opacity: 1.0,
+            attribution: '<a href="https://www.openstreetmap.org/copyright">© OpenStreetMap contributors, CC-BY-SA</a>',
+            minZoom: 1,
+            maxZoom: 28,
+            minNativeZoom: 0,
+            maxNativeZoom: 19
+        });
+        layer_OSMStandard_0;
+        map.addLayer(layer_OSMStandard_0);
+        function pop_IND_adm1_1(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">ID_0</th>\
+                        <td>' + (feature.properties['ID_0'] !== null ? autolinker.link(feature.properties['ID_0'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">ISO</th>\
+                        <td>' + (feature.properties['ISO'] !== null ? autolinker.link(feature.properties['ISO'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">NAME_0</th>\
+                        <td>' + (feature.properties['NAME_0'] !== null ? autolinker.link(feature.properties['NAME_0'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">ID_1</th>\
+                        <td>' + (feature.properties['ID_1'] !== null ? autolinker.link(feature.properties['ID_1'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">NAME_1</th>\
+                        <td>' + (feature.properties['NAME_1'] !== null ? autolinker.link(feature.properties['NAME_1'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">TYPE_1</th>\
+                        <td>' + (feature.properties['TYPE_1'] !== null ? autolinker.link(feature.properties['TYPE_1'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">ENGTYPE_1</th>\
+                        <td>' + (feature.properties['ENGTYPE_1'] !== null ? autolinker.link(feature.properties['ENGTYPE_1'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">NL_NAME_1</th>\
+                        <td>' + (feature.properties['NL_NAME_1'] !== null ? autolinker.link(feature.properties['NL_NAME_1'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">VARNAME_1</th>\
+                        <td>' + (feature.properties['VARNAME_1'] !== null ? autolinker.link(feature.properties['VARNAME_1'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">BIODIVERSITY_Total No. of Local Bodies</th>\
+                        <td>' + (feature.properties['BIODIVERSITY_Total No. of Local Bodies'] !== null ? autolinker.link(feature.properties['BIODIVERSITY_Total No. of Local Bodies'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">BIODIVERSITY_Total No of PBRs Prepared</th>\
+                        <td>' + (feature.properties['BIODIVERSITY_Total No of PBRs Prepared'] !== null ? autolinker.link(feature.properties['BIODIVERSITY_Total No of PBRs Prepared'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">BIODIVERSITY_X-cor</th>\
+                        <td>' + (feature.properties['BIODIVERSITY_X-cor'] !== null ? autolinker.link(feature.properties['BIODIVERSITY_X-cor'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">BIODIVERSITY_Y-cor</th>\
+                        <td>' + (feature.properties['BIODIVERSITY_Y-cor'] !== null ? autolinker.link(feature.properties['BIODIVERSITY_Y-cor'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_IND_adm1_1_0(feature) {
+            if (feature.properties['BIODIVERSITY_Total No of PBRs Prepared'] >= 0.000000 && feature.properties['BIODIVERSITY_Total No of PBRs Prepared'] <= 2549.000000 ) {
+                return {
+                pane: 'pane_IND_adm1_1',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,255,255,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['BIODIVERSITY_Total No of PBRs Prepared'] >= 2549.000000 && feature.properties['BIODIVERSITY_Total No of PBRs Prepared'] <= 6554.000000 ) {
+                return {
+                pane: 'pane_IND_adm1_1',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,191,191,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['BIODIVERSITY_Total No of PBRs Prepared'] >= 6554.000000 && feature.properties['BIODIVERSITY_Total No of PBRs Prepared'] <= 14716.000000 ) {
+                return {
+                pane: 'pane_IND_adm1_1',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,128,128,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['BIODIVERSITY_Total No of PBRs Prepared'] >= 14716.000000 && feature.properties['BIODIVERSITY_Total No of PBRs Prepared'] <= 28649.000000 ) {
+                return {
+                pane: 'pane_IND_adm1_1',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,64,64,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['BIODIVERSITY_Total No of PBRs Prepared'] >= 28649.000000 && feature.properties['BIODIVERSITY_Total No of PBRs Prepared'] <= 59407.000000 ) {
+                return {
+                pane: 'pane_IND_adm1_1',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,0,0,1.0)',
+                interactive: true,
+            }
+            }
+        }
+        map.createPane('pane_IND_adm1_1');
+        map.getPane('pane_IND_adm1_1').style.zIndex = 401;
+        map.getPane('pane_IND_adm1_1').style['mix-blend-mode'] = 'normal';
+        var layer_IND_adm1_1 = new L.geoJson(json_IND_adm1_1, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_IND_adm1_1',
+            layerName: 'layer_IND_adm1_1',
+            pane: 'pane_IND_adm1_1',
+            onEachFeature: pop_IND_adm1_1,
+            style: style_IND_adm1_1_0,
+        });
+        bounds_group.addLayer(layer_IND_adm1_1);
+        map.addLayer(layer_IND_adm1_1);
+        var osmGeocoder = new L.Control.Geocoder({
+            collapsed: true,
+            position: 'topleft',
+            text: 'Search',
+            title: 'Testing'
+        }).addTo(map);
+        document.getElementsByClassName('leaflet-control-geocoder-icon')[0]
+        .className += ' fa fa-search';
+        document.getElementsByClassName('leaflet-control-geocoder-icon')[0]
+        .title += 'Search for a place';
+        var baseMaps = {};
+        L.control.layers(baseMaps,{'IND_adm1<br /><table><tr><td style="text-align: center;"><img src="legend/IND_adm1_1_025490.png" /></td><td>0 - 2549</td></tr><tr><td style="text-align: center;"><img src="legend/IND_adm1_1_254965541.png" /></td><td>2549 - 6554</td></tr><tr><td style="text-align: center;"><img src="legend/IND_adm1_1_6554147162.png" /></td><td>6554 - 14716</td></tr><tr><td style="text-align: center;"><img src="legend/IND_adm1_1_14716286493.png" /></td><td>14716 - 28649</td></tr><tr><td style="text-align: center;"><img src="legend/IND_adm1_1_28649594074.png" /></td><td>28649 - 59407</td></tr></table>': layer_IND_adm1_1,"OSM Standard": layer_OSMStandard_0,}).addTo(map);
+        setBounds();
+        map.addControl(new L.Control.Search({
+            layer: layer_IND_adm1_1,
+            initial: false,
+            hideMarkerOnCollapse: true,
+            propertyName: 'BIODIVERSITY_Total No of PBRs Prepared'}));
+        document.getElementsByClassName('search-button')[0].className +=
+         ' fa fa-binoculars';
+        </script>
+    </body>
+</html>
